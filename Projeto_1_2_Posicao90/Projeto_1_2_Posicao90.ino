@@ -9,6 +9,11 @@ Servo servo2;  // Cria objeto servo para controlar o servo2 - OMBRO
 Servo servo3;  // Cria objeto servo para controlar o servo3 - COTOVELO
 Servo servo4;  // Cria objeto servo para controlar o servo4 - GARRA
 
+// Pino ligado ao REC do modulo
+int pino_rec = 6;
+// Pino ligado ao P-E (PLAYE) do modulo
+int pino_playe = 7 ;
+
 // Variáveis 
 int pos = 0;    // Variável para armazenar a posição do servo
 int velocidade = 1500;  
@@ -17,9 +22,9 @@ void setup() {
 
   Serial.begin(9600);
   // Anexa o objeto servo ao pino
-  //servo1.attach(11);  // Anexa o servo no pino 11 - BASE
+  servo1.attach(11);  // Anexa o servo no pino 11 - BASE
   // servo2.attach(10);  // Anexa o servo no pino 10 - OMBRO
-   //servo3.attach(9);   // Anexa o servo no pino 9 - COTOVELO
+  servo3.attach(9);   // Anexa o servo no pino 9 - COTOVELO
   //servo4.attach(6);   // Anexa o servo no pino 6 - GARRA
   
   // Configura as posições iniciais dos servos
@@ -27,6 +32,9 @@ void setup() {
   servo2.write(90);   // OMBRO: posição inicial de 90 graus
   servo3.write(0);   // COTOVELO: posição inicial de 60 graus
   servo4.write(160);  // GARRA: posição inicial de 160 graus
+
+  //pinMode(pino_rec, OUTPUT); //REC
+  pinMode(pino_playe, OUTPUT); //PLAYER
 }
  
 void loop() {
@@ -35,6 +43,8 @@ void loop() {
   //   servo1.write(pos);          // Move o servo1 para a posição 'pos'
   //   delay(15);                  // Aguarda 15 ms para o servo alcançar a posição
   // }
+
+
 
   Serial.println("Movimento: Sentido horário");
   for (velocidade = 1600; velocidade <= 2000; velocidade += 10) { // 1600 até 2000 para controle da velocidade
@@ -46,8 +56,11 @@ void loop() {
 
   Serial.println("Pausa no centro");
   servo1.writeMicroseconds(1500);  // 1500 é geralmente o ponto central (servo parado)
+
+  digitalWrite(pino_playe, HIGH);
+  Serial.println("Reproduzindo!");
   delay(1000);  // Pausa por 1 segundo
-  
+  digitalWrite(pino_playe, LOW);
   // Movimento do servo2 (OMBRO) de 90 graus a 135 graus
   for (pos = 90; pos <= 135; pos += 1) {
     servo2.write(pos);          // Move o servo2 para a posição 'pos'
@@ -83,7 +96,10 @@ void loop() {
   // Pausa no centro novamente (parado)
   Serial.println("Pausa no centro");
   servo1.writeMicroseconds(1500);  // 1500 é o ponto central (servo parado)
+  digitalWrite(pino_playe, HIGH);
+  Serial.println("Reproduzindo!");
   delay(1000);  
+  digitalWrite(pino_playe, LOW);
   
   // Movimento do servo2 (OMBRO) de 135 graus a 90 graus
   for (pos = 135; pos >= 90; pos -= 1) {
